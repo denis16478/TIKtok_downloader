@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TikTok Downloader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #2f80ed;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1c60b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TikTok Video Downloader</h1>
+    <input type="text" id="url" placeholder="Вставьте ссылку на видео TikTok">
+    <br>
+    <button onclick="download()">Скачать</button>
+  </div>
+  <script>
+    async function download() {
+      const url = document.getElementById("url").value;
+      if (!url) {
+        alert("Введите ссылку на TikTok!");
+        return;
+      }
+      try {
+        const response = await fetch(`/download?url=${encodeURIComponent(url)}`);
+        if (!response.ok) throw new Error("Не удалось скачать видео");
+
+        const blob = await response.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "tiktok_video.mp4";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (err) {
+        alert("Ошибка при скачивании: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
